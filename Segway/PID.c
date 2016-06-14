@@ -10,8 +10,8 @@
 //Gloabl Variables
 double PID_value; //PID Value
 static double last_Error; // Previous angle Error
-static double integrated_Error // Previous integration error
-static double current_Speed //
+static double integrated_Error; // Previous integration error
+static double current_Speed; //
 
 void updatePID(double restAngle, double offset, double turning, double dt)
 {

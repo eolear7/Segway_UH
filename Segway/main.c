@@ -3,6 +3,7 @@
 #include "inc/hw_types.h"
 #include "driverlib/pwm.h"
 #include "inc/hw_gpio.h"
+#include "Kill_Switch.h"
 #define PWM_FREQUENCY 20000
 
 
@@ -632,6 +633,8 @@ int main(void)
 	            UARTprintf("\033[19;50H%3d.%03d", i32IPart[14], i32FPart[14]);
 	            UARTprintf("\033[19;68H%3d.%03d", i32IPart[15], i32FPart[15]);
 			 */
+
+			while()
 
 			if(i32IPart[9] > 20)
 			{

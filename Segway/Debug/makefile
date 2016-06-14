@@ -10,6 +10,9 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./Kill_Switch.obj" \
+"./PID.obj" \
+"./Sensor_Hub.obj" \
 "./main.obj" \
 "./startup_ccs.obj" \
 "./utils/uartstdio.obj" \
@@ -161,8 +164,8 @@ Segway.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "main.pp" "startup_ccs.pp" "utils\uartstdio.pp" "drivers\rgb.pp" 
-	-$(RM) "main.obj" "startup_ccs.obj" "utils\uartstdio.obj" "drivers\rgb.obj" 
+	-$(RM) "Kill_Switch.pp" "PID.pp" "Sensor_Hub.pp" "main.pp" "startup_ccs.pp" "utils\uartstdio.pp" "drivers\rgb.pp" 
+	-$(RM) "Kill_Switch.obj" "PID.obj" "Sensor_Hub.obj" "main.obj" "startup_ccs.obj" "utils\uartstdio.obj" "drivers\rgb.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
