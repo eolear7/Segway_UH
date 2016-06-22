@@ -7,6 +7,8 @@
 #ifndef SENSOR_HUB_H_
 #define SENSOR_HUB_H_
 
+#include <stdbool.h>
+#include <stdint.h>
 
 void MPU9150AppCallback(void *pvCallbackData, uint_fast8_t ui8Status);
 void IntGPIOb(void);

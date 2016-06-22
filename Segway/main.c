@@ -1,5 +1,7 @@
 // Team Segway, Team 11.
 // Emmanuel Olear, Nelson Raymond Grajales,
+#include <stdbool.h>
+#include <stdint.h>
 #include "inc/hw_types.h"
 #include "driverlib/pwm.h"
 #include "inc/hw_gpio.h"
@@ -100,9 +102,6 @@ int main(void)
 	//
 	// Set the color to a purple approximation.
 	//
-	g_pui32Colors[RED] = 0x8000;
-	g_pui32Colors[BLUE] = 0x8000;
-	g_pui32Colors[GREEN] = 0x0000;
 
 	//
 	// Initialize RGB driver.
@@ -521,6 +520,3 @@ int main(void)
 
 
 }
-
-
-

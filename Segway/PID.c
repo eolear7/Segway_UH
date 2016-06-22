@@ -8,10 +8,10 @@
 #include "PID.h"
 
 //Gloabl Variables
-double PID_value; //PID Value
+double PID_Value; //PID Value
 static double last_Error; // Previous angle Error
 static double integrated_Error; // Previous integration error
-static double current_Speed; //
+static double current_speed; //
 
 void updatePID(double restAngle, double offset, double turning, double dt)
 {
@@ -22,7 +22,7 @@ void updatePID(double restAngle, double offset, double turning, double dt)
 	double i_term = (seg_vals.Ki *100.0) * integrated_Error;
 	double d_term = (seg_vals.Kd / 100.0) * (error - last_Error) / dt;
 	last_Error = error;
-	PID_Value = p_term + i_term + dterm;
+	PID_Value = p_term + i_term + d_term;
 
-	current_speed = (current_speed+ PID_Value *0.004)*.999; // need to calculate these values
+	current_speed = (current_speed + PID_Value *0.004)*.999; // need to calculate these values
 }

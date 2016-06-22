@@ -5,4 +5,5 @@
  *      Author: Nelson Raym Grajales
  */
 
-
+#include <stdbool.h>
+#include <stdint.h>
