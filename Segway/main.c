@@ -7,8 +7,8 @@
 #include "inc/hw_gpio.h"
 #include "Kill_Switch.h"
 #include "Sensor_Hub.h"
-#define PWM_FREQUENCY 20000
 
+#define PWM_FREQUENCY 20000
 
 int main(void)
 {
@@ -17,7 +17,7 @@ int main(void)
 	volatile uint32_t ui8Adjust;
 	ui8Adjust = 500;
 	//ui8Adjust = 200;
-	ROM_SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_OSC_MAIN|SYSCTL_XTAL_16MHZ);
+	ROM_SysCtlClockSet(SYSCTL_SYSDIV_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN| SYSCTL_XTAL_16MHZ);
 	ROM_SysCtlPWMClockSet(SYSCTL_PWMDIV_2);
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM1);
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
@@ -27,8 +27,8 @@ int main(void)
 	HWREG(GPIO_PORTF_BASE + GPIO_O_LOCK) = GPIO_LOCK_KEY;
 	HWREG(GPIO_PORTF_BASE + GPIO_O_CR) |= 0x01;
 	HWREG(GPIO_PORTF_BASE + GPIO_O_LOCK) = 0;
-	ROM_GPIODirModeSet(GPIO_PORTF_BASE, GPIO_PIN_4|GPIO_PIN_0, GPIO_DIR_MODE_IN);
-	ROM_GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_4|GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+	ROM_GPIODirModeSet(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_0,GPIO_DIR_MODE_IN);
+	ROM_GPIOPadConfigSet(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_0,GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 	ui32PWMClock = SysCtlClockGet() / 2;
 	ui32Load = (ui32PWMClock / PWM_FREQUENCY) - 1;
 	PWMGenConfigure(PWM1_BASE, PWM_GEN_1, PWM_GEN_MODE_DOWN);
@@ -36,35 +36,6 @@ int main(void)
 	ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
 	ROM_PWMOutputState(PWM1_BASE, PWM_OUT_2_BIT, true);
 	ROM_PWMGenEnable(PWM1_BASE, PWM_GEN_1);
-
-
-
-
-
-	/*
-	while(1)
-	{
-		if(ROM_GPIOPinRead(GPIO_PORTF_BASE,GPIO_PIN_4)==0x00)
-		{
-			ui8Adjust--;
-			if (ui8Adjust < 56)
-			{
-				ui8Adjust = 56;
-			}
-			ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-		}
-		if(ROM_GPIOPinRead(GPIO_PORTF_BASE,GPIO_PIN_0)==0x00)
-		{
-			ui8Adjust++;
-			if (ui8Adjust > 111)
-			{
-				ui8Adjust = 111;
-			}
-			ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-		}
-		ROM_SysCtlDelay(100000);
-	}
-	 */
 
 	int_fast32_t i32IPart[16], i32FPart[16];
 	uint_fast32_t ui32Idx, ui32CompDCMStarted;
@@ -184,8 +155,8 @@ int main(void)
 	//
 	g_sMPU9150Inst.pui8Data[0] = MPU9150_CONFIG_DLPF_CFG_94_98;
 	g_sMPU9150Inst.pui8Data[1] = MPU9150_GYRO_CONFIG_FS_SEL_250;
-	g_sMPU9150Inst.pui8Data[2] = (MPU9150_ACCEL_CONFIG_ACCEL_HPF_5HZ |
-			MPU9150_ACCEL_CONFIG_AFS_SEL_2G);
+	g_sMPU9150Inst.pui8Data[2] = (MPU9150_ACCEL_CONFIG_ACCEL_HPF_5HZ
+			| MPU9150_ACCEL_CONFIG_AFS_SEL_2G);
 	MPU9150Write(&g_sMPU9150Inst, MPU9150_O_CONFIG, g_sMPU9150Inst.pui8Data, 3,
 			MPU9150AppCallback, &g_sMPU9150Inst);
 
@@ -197,13 +168,9 @@ int main(void)
 	//
 	// Configure the data ready interrupt pin output of the MPU9150.
 	//
-	g_sMPU9150Inst.pui8Data[0] = MPU9150_INT_PIN_CFG_INT_LEVEL |
-			MPU9150_INT_PIN_CFG_INT_RD_CLEAR |
-			MPU9150_INT_PIN_CFG_LATCH_INT_EN;
+	g_sMPU9150Inst.pui8Data[0] = MPU9150_INT_PIN_CFG_INT_LEVEL| MPU9150_INT_PIN_CFG_INT_RD_CLEAR| MPU9150_INT_PIN_CFG_LATCH_INT_EN;
 	g_sMPU9150Inst.pui8Data[1] = MPU9150_INT_ENABLE_DATA_RDY_EN;
-	MPU9150Write(&g_sMPU9150Inst, MPU9150_O_INT_PIN_CFG,
-			g_sMPU9150Inst.pui8Data, 2, MPU9150AppCallback,
-			&g_sMPU9150Inst);
+	MPU9150Write(&g_sMPU9150Inst, MPU9150_O_INT_PIN_CFG,g_sMPU9150Inst.pui8Data, 2, MPU9150AppCallback, &g_sMPU9150Inst);
 
 	//
 	// Wait for transaction to complete
@@ -236,12 +203,12 @@ int main(void)
 
 	ui32CompDCMStarted = 0;
 
-	while(1)
+	while (1)
 	{
 		//
 		// Go to sleep mode while waiting for data ready.
 		//
-		while(!g_vui8I2CDoneFlag)
+		while (!g_vui8I2CDoneFlag)
 		{
 			//ROM_SysCtlSleep();
 		}
@@ -273,22 +240,17 @@ int main(void)
 		// Check if this is our first data ever.
 		//
 
-
-
-
-		if(ui32CompDCMStarted == 0)
+		if (ui32CompDCMStarted == 0)
 		{
 			//
 			// Set flag indicating that DCM is started.
 			// Perform the seeding of the DCM with the first data set.
 			//
 			ui32CompDCMStarted = 1;
-			CompDCMMagnetoUpdate(&g_sCompDCMInst, pfMag[0], pfMag[1],
-					pfMag[2]);
+			CompDCMMagnetoUpdate(&g_sCompDCMInst, pfMag[0], pfMag[1], pfMag[2]);
 			CompDCMAccelUpdate(&g_sCompDCMInst, pfAccel[0], pfAccel[1],
 					pfAccel[2]);
-			CompDCMGyroUpdate(&g_sCompDCMInst, pfGyro[0], pfGyro[1],
-					pfGyro[2]);
+			CompDCMGyroUpdate(&g_sCompDCMInst, pfGyro[0], pfGyro[1], pfGyro[2]);
 			CompDCMStart(&g_sCompDCMInst);
 		}
 		else
@@ -296,8 +258,7 @@ int main(void)
 			//
 			// DCM Is already started.  Perform the incremental update.
 			//
-			CompDCMMagnetoUpdate(&g_sCompDCMInst, pfMag[0], pfMag[1],
-					pfMag[2]);
+			CompDCMMagnetoUpdate(&g_sCompDCMInst, pfMag[0], pfMag[1], pfMag[2]);
 			CompDCMAccelUpdate(&g_sCompDCMInst, pfAccel[0], pfAccel[1],
 					pfAccel[2]);
 			CompDCMGyroUpdate(&g_sCompDCMInst, -pfGyro[0], -pfGyro[1],
@@ -310,7 +271,7 @@ int main(void)
 		// overflow the UART with data.
 		//
 		g_ui32PrintSkipCounter++;
-		if(g_ui32PrintSkipCounter >= PRINT_SKIP_COUNT)
+		if (g_ui32PrintSkipCounter >= PRINT_SKIP_COUNT)
 		{
 			//
 			// Reset skip counter.
@@ -342,8 +303,7 @@ int main(void)
 			pfEulers[0] *= 57.295779513082320876798154814105f;
 			pfEulers[1] *= 57.295779513082320876798154814105f;
 			pfEulers[2] *= 57.295779513082320876798154814105f;
-			if(pfEulers[2] < 0)
-			{
+			if (pfEulers[2] < 0) {
 				pfEulers[2] += 360.0f;
 			}
 
@@ -352,7 +312,7 @@ int main(void)
 			// purpose of decomposing the float into a integer part and a
 			// fraction (decimal) part.
 			//
-			for(ui32Idx = 0; ui32Idx < 16; ui32Idx++)
+			for (ui32Idx = 0; ui32Idx < 16; ui32Idx++)
 			{
 				//
 				// Conver float value to a integer truncating the decimal part.
@@ -369,154 +329,120 @@ int main(void)
 				// Subtract off the integer part from this newly formed decimal
 				// part.
 				//
-				i32FPart[ui32Idx] = i32FPart[ui32Idx] -
-						(i32IPart[ui32Idx] * 1000);
+				i32FPart[ui32Idx] = i32FPart[ui32Idx]
+						- (i32IPart[ui32Idx] * 1000);
 
 				//
 				// make the decimal part a positive number for display.
 				//
-				if(i32FPart[ui32Idx] < 0)
-				{
+				if (i32FPart[ui32Idx] < 0) {
 					i32FPart[ui32Idx] *= -1;
 				}
 			}
 
 			//
 			/*
-			  // Print the acceleration numbers in the table.
-	            //
-	            UARTprintf("\033[5;17H%3d.%03d", i32IPart[0], i32FPart[0]);
-	            UARTprintf("\033[5;40H%3d.%03d", i32IPart[1], i32FPart[1]);
-	            UARTprintf("\033[5;63H%3d.%03d", i32IPart[2], i32FPart[2]);
+			 // Print the acceleration numbers in the table.
+			 //
+			 UARTprintf("\033[5;17H%3d.%03d", i32IPart[0], i32FPart[0]);
+			 UARTprintf("\033[5;40H%3d.%03d", i32IPart[1], i32FPart[1]);
+			 UARTprintf("\033[5;63H%3d.%03d", i32IPart[2], i32FPart[2]);
 
 
-	            //
-	            // Print the angular velocities in the table.
-	            //
-	            UARTprintf("\033[7;17H%3d.%03d", i32IPart[3], i32FPart[3]);
-	            UARTprintf("\033[7;40H%3d.%03d", i32IPart[4], i32FPart[4]);
-	            UARTprintf("\033[7;63H%3d.%03d", i32IPart[5], i32FPart[5]);
+			 //
+			 // Print the angular velocities in the table.
+			 //
+			 UARTprintf("\033[7;17H%3d.%03d", i32IPart[3], i32FPart[3]);
+			 UARTprintf("\033[7;40H%3d.%03d", i32IPart[4], i32FPart[4]);
+			 UARTprintf("\033[7;63H%3d.%03d", i32IPart[5], i32FPart[5]);
 
-	            //
-	            // Print the magnetic data in the table.
-	            //
-	            UARTprintf("\033[9;17H%3d.%03d", i32IPart[6], i32FPart[6]);
-	            UARTprintf("\033[9;40H%3d.%03d", i32IPart[7], i32FPart[7]);
-	            UARTprintf("\033[9;63H%3d.%03d", i32IPart[8], i32FPart[8]);
+			 //
+			 // Print the magnetic data in the table.
+			 //
+			 UARTprintf("\033[9;17H%3d.%03d", i32IPart[6], i32FPart[6]);
+			 UARTprintf("\033[9;40H%3d.%03d", i32IPart[7], i32FPart[7]);
+			 UARTprintf("\033[9;63H%3d.%03d", i32IPart[8], i32FPart[8]);
 			 */
 			//
 			// Print the Eulers in a table.
-
 			//
 			UARTprintf("\033[14;17H%3d.%03d", i32IPart[9], i32FPart[9]);
 			UARTprintf("\033[14;40H%3d.%03d", i32IPart[10], i32FPart[10]);
 			UARTprintf("\033[14;63H%3d.%03d", i32IPart[11], i32FPart[11]);
 
-
 			/*
-			if(ROM_GPIOPinRead(GPIO_PORTF_BASE,GPIO_PIN_4)==0x00)
-					{
-						ui8Adjust--;
-						if (ui8Adjust < 56)
-						{
-							ui8Adjust = 56;
-						}
-						ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-					}
-					if(ROM_GPIOPinRead(GPIO_PORTF_BASE,GPIO_PIN_0)==0x00)
-					{
-						ui8Adjust++;
-						if (ui8Adjust > 111)
-						{
-							ui8Adjust = 111;
-						}
-						ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-					}
-					ROM_SysCtlDelay(1000);
-		}
+			 if(ROM_GPIOPinRead(GPIO_PORTF_BASE,GPIO_PIN_4)==0x00)
+			 {
+			 ui8Adjust--;
+			 if (ui8Adjust < 56)
+			 {
+			 ui8Adjust = 56;
+			 }
+			 ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
+			 }
+			 if(ROM_GPIOPinRead(GPIO_PORTF_BASE,GPIO_PIN_0)==0x00)
+			 {
+			 ui8Adjust++;
+			 if (ui8Adjust > 111)
+			 {
+			 ui8Adjust = 111;
+			 }
+			 ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
+			 }
+			 ROM_SysCtlDelay(1000);
+			 }
 			 */
 			/*
-			//
-	            // Print the quaternions in a table format.
-	            //
-	            UARTprintf("\033[19;14H%3d.%03d", i32IPart[12], i32FPart[12]);
-	            UARTprintf("\033[19;32H%3d.%03d", i32IPart[13], i32FPart[13]);
-	            UARTprintf("\033[19;50H%3d.%03d", i32IPart[14], i32FPart[14]);
-	            UARTprintf("\033[19;68H%3d.%03d", i32IPart[15], i32FPart[15]);
+			 //
+			 // Print the quaternions in a table format.
+			 //
+			 UARTprintf("\033[19;14H%3d.%03d", i32IPart[12], i32FPart[12]);
+			 UARTprintf("\033[19;32H%3d.%03d", i32IPart[13], i32FPart[13]);
+			 UARTprintf("\033[19;50H%3d.%03d", i32IPart[14], i32FPart[14]);
+			 UARTprintf("\033[19;68H%3d.%03d", i32IPart[15], i32FPart[15]);
 			 */
 
-			while(kill_function())
-			{
-			if(i32IPart[9] > 20)
-			{
+			while (kill_function()) {
+				if (i32IPart[9] > 20) {
+					ui8Adjust--;
+					if (ui8Adjust < 200) {
+						ui8Adjust = 200;
+					}
+					ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2,
+							ui8Adjust * ui32Load / 1000);
+
+				}
+				if (i32IPart[9] < -5) {
+					ui8Adjust++;
+					if (ui8Adjust > 900) {
+						ui8Adjust = 900;
+					}
+					ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2,
+							ui8Adjust * ui32Load / 1000);
+
+				}
+				//ROM_SysCtlDelay(50000);
+			}
+
+			if (i32IPart[9] > 20) {
 				ui8Adjust--;
-				if (ui8Adjust < 200)
-				{
+				if (ui8Adjust < 200) {
 					ui8Adjust = 200;
 				}
-				ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
+				ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2,
+						ui8Adjust * ui32Load / 1000);
 
 			}
-			if(i32IPart[9] < -5)
-			{
+			if (i32IPart[9] < -5) {
 				ui8Adjust++;
-				if (ui8Adjust > 900)
-				{
+				if (ui8Adjust > 900) {
 					ui8Adjust = 900;
 				}
-				ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
+				ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2,
+						ui8Adjust * ui32Load / 1000);
 
 			}
-			//ROM_SysCtlDelay(50000);
 		}
-
-		if(i32IPart[9] > 20)
-		{
-			ui8Adjust--;
-			if (ui8Adjust < 200)
-			{
-				ui8Adjust = 200;
-			}
-			ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-
-		}
-		if(i32IPart[9] < -5)
-		{
-			ui8Adjust++;
-			if (ui8Adjust > 900)
-			{
-				ui8Adjust = 900;
-			}
-			ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-
-		}
-		}
-		//ROM_SysCtlDelay(50000);
-/*
-		if(i32IPart[9] > 20)
-		{
-			ui8Adjust--;
-			if (ui8Adjust < 56)
-			{
-				ui8Adjust = 56;
-			}
-			ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-
-		}
-		if(i32IPart[9] < -5)
-		{
-			ui8Adjust++;
-			if (ui8Adjust > 700)
-			{
-				ui8Adjust = 700;
-			}
-			ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, ui8Adjust * ui32Load / 1000);
-
-		} */
 	}
-
-
-
-
 
 }
